@@ -15,44 +15,46 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
   }
 
   return (
-    <div className="max-w-3xl space-y-6">
+    <div className="max-w-3xl space-y-4">
       <div className="flex items-start justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <a href="/leads" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
             ← Volver a leads
           </a>
-          <h1 className="text-2xl font-bold mt-2">{lead.company_name}</h1>
+          <h1 className="text-xl md:text-2xl font-bold mt-2 leading-tight">{lead.company_name}</h1>
           {lead.website && (
-            <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
+            <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-400 hover:text-blue-300 transition-colors break-all">
               {lead.website}
             </a>
           )}
         </div>
-        <ScoreBadge score={lead.fit_score} />
+        <div className="shrink-0 mt-6">
+          <ScoreBadge score={lead.fit_score} />
+        </div>
       </div>
 
       {lead.suggested_pitch && (
-        <div className="bg-slate-900 border border-green-800 rounded-xl p-5">
+        <div className="bg-slate-900 border border-green-800 rounded-xl p-4">
           <p className="text-xs text-green-400 uppercase tracking-wide mb-3 font-semibold">Mensaje de apertura</p>
-          <p className="text-slate-200 leading-relaxed whitespace-pre-wrap">{lead.suggested_pitch}</p>
+          <p className="text-slate-200 leading-relaxed whitespace-pre-wrap text-sm md:text-base">{lead.suggested_pitch}</p>
         </div>
       )}
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {lead.why_cortex_fits && (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
             <p className="text-xs text-slate-400 uppercase tracking-wide mb-2 font-semibold">Por qué encaja</p>
             <p className="text-sm text-slate-300 leading-relaxed">{lead.why_cortex_fits}</p>
           </div>
         )}
 
         {lead.pain_points && lead.pain_points.length > 0 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
             <p className="text-xs text-slate-400 uppercase tracking-wide mb-2 font-semibold">Pain points</p>
             <ul className="space-y-1.5">
               {lead.pain_points.map((p, i) => (
                 <li key={i} className="text-sm text-slate-300 flex gap-2">
-                  <span className="text-slate-600 mt-0.5">•</span>
+                  <span className="text-slate-600 mt-0.5 shrink-0">•</span>
                   {p}
                 </li>
               ))}
@@ -61,12 +63,12 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
         )}
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
         <p className="text-xs text-slate-400 uppercase tracking-wide mb-2 font-semibold">Descripción original</p>
         <p className="text-sm text-slate-400 leading-relaxed">{lead.description}</p>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 grid grid-cols-2 gap-4 text-sm">
         <div>
           <p className="text-slate-500 text-xs">Creado</p>
           <p>{new Date(lead.created_at).toLocaleDateString("es", { day: "2-digit", month: "short", year: "numeric" })}</p>

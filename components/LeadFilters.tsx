@@ -2,13 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-export default function LeadFilters({
-  minScore,
-  emailFilter,
-}: {
-  minScore?: string;
-  emailFilter?: string;
-}) {
+export default function LeadFilters({ minScore, emailFilter }: { minScore?: string; emailFilter?: string }) {
   const router = useRouter();
 
   function apply(e: React.FormEvent<HTMLFormElement>) {
@@ -21,7 +15,7 @@ export default function LeadFilters({
   }
 
   return (
-    <form onSubmit={apply} className="flex items-center gap-2">
+    <form onSubmit={apply} className="flex items-center gap-2 flex-wrap">
       <select
         name="min_score"
         defaultValue={minScore ?? ""}
@@ -32,10 +26,7 @@ export default function LeadFilters({
         <option value="70">Score ≥ 70</option>
         <option value="60">Score ≥ 60</option>
       </select>
-      <button
-        type="submit"
-        className="bg-blue-600 hover:bg-blue-500 text-white text-sm px-3 py-1.5 rounded-lg transition-colors"
-      >
+      <button type="submit" className="bg-blue-600 hover:bg-blue-500 text-white text-sm px-3 py-1.5 rounded-lg transition-colors">
         Filtrar
       </button>
       {(minScore || emailFilter) && (

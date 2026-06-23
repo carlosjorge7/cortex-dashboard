@@ -1,8 +1,14 @@
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://100.73.5.37:8000";
+const SERVER_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? "";
 
+// On the browser, route through Next.js proxy to avoid localhost cross-origin issues
+function getBase() {
+  if (typeof window !== "undefined") return "/api-proxy";
+  return SERVER_BASE;
+}
+
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await fetch(`${getBase()}${path}`, {
     ...init,
     headers: { "X-API-Key": API_KEY, "Content-Type": "application/json", ...init?.headers },
     cache: "no-store",
@@ -110,5 +116,5 @@ export const api = {
     apiFetch<Schedule>(`/schedules/${id}/toggle`, { method: "PATCH" }),
 
   deleteSchedule: (id: string) =>
-    fetch(`${BASE}/schedules/${id}`, { method: "DELETE", headers: { "X-API-Key": API_KEY } }),
+    fetch(`${getBase()}/schedules/${id}`, { method: "DELETE", headers: { "X-API-Key": API_KEY } }),
 };

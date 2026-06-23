@@ -20,6 +20,7 @@ export type Lead = {
   pain_points: string[] | null;
   why_cortex_fits: string | null;
   suggested_pitch: string | null;
+  original_pitch?: string | null;
   email_sent: boolean;
   email_sent_at: string | null;
   resend_email_id: string | null;
@@ -28,6 +29,8 @@ export type Lead = {
   created_at: string;
   analyzed_at: string | null;
   status?: string;
+  replied: boolean;
+  converted: boolean;
 };
 
 export type LeadListResponse = {
@@ -45,6 +48,9 @@ export type Stats = {
   score_distribution: { low: number; medium: number; high: number };
   leads_pending_review: number;
   leads_rejected: number;
+  leads_email_opened: number;
+  leads_replied: number;
+  leads_converted: number;
 };
 
 export type Schedule = {
@@ -88,6 +94,12 @@ export const api = {
       method: "PATCH",
       body: JSON.stringify({ suggested_pitch: pitch }),
     }),
+
+  markReplied: (id: string) =>
+    apiFetch<Lead>(`/leads/${id}/mark-replied`, { method: "POST" }),
+
+  markConverted: (id: string) =>
+    apiFetch<Lead>(`/leads/${id}/mark-converted`, { method: "POST" }),
 
   schedules: () => apiFetch<Schedule[]>("/schedules"),
 

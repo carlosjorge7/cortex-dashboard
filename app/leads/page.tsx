@@ -9,15 +9,31 @@ const PAGE_SIZE = 20;
 export default async function LeadsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string; min_score?: string; email?: string }>;
+  searchParams: Promise<{ page?: string; min_score?: string; email?: string; status?: string }>;
 }) {
   const params = await searchParams;
   const page = Number(params.page ?? 1);
   const minScore = params.min_score ? Number(params.min_score) : undefined;
+  const statusFilter = params.status;
   const offset = (page - 1) * PAGE_SIZE;
 
-  const data = await api.leads({ limit: PAGE_SIZE, offset, min_score: minScore });
+  const data = await api.leads({ limit: PAGE_SIZE, offset, min_score: minScore, status: statusFilter });
   const totalPages = Math.ceil(data.total / PAGE_SIZE);
+
+  const tabs = [
+    { label: "Todos", value: undefined },
+    { label: "Pendientes", value: "pending_review" },
+    { label: "Enviados", value: "sent" },
+    { label: "Rechazados", value: "rejected" },
+  ];
+
+  function tabHref(value: string | undefined) {
+    const q = new URLSearchParams();
+    if (value) q.set("status", value);
+    if (params.min_score) q.set("min_score", params.min_score);
+    const qs = q.toString();
+    return `/leads${qs ? `?${qs}` : ""}`;
+  }
 
   return (
     <div className="space-y-4">
@@ -27,6 +43,25 @@ export default async function LeadsPage({
           <p className="text-slate-400 text-sm mt-0.5">{data.total} leads totales</p>
         </div>
         <LeadFilters minScore={params.min_score} emailFilter={params.email} />
+      </div>
+
+      <div className="flex gap-1 border-b border-slate-800 pb-0">
+        {tabs.map((tab) => {
+          const active = statusFilter === tab.value;
+          return (
+            <a
+              key={tab.label}
+              href={tabHref(tab.value)}
+              className={`px-3 py-2 text-sm rounded-t-lg transition-colors border-b-2 -mb-px ${
+                active
+                  ? "border-blue-500 text-white font-medium"
+                  : "border-transparent text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              {tab.label}
+            </a>
+          );
+        })}
       </div>
 
       {/* Mobile: cards */}
@@ -107,7 +142,7 @@ export default async function LeadsPage({
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <a
               key={p}
-              href={`/leads?page=${p}${minScore ? `&min_score=${minScore}` : ""}`}
+              href={`/leads?page=${p}${minScore ? `&min_score=${minScore}` : ""}${statusFilter ? `&status=${statusFilter}` : ""}`}
               className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
                 p === page ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"
               }`}

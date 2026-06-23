@@ -27,6 +27,7 @@ export type Lead = {
   email_opened_at: string | null;
   created_at: string;
   analyzed_at: string | null;
+  status?: string;
 };
 
 export type LeadListResponse = {
@@ -42,6 +43,8 @@ export type Stats = {
   leads_email_sent: number;
   leads_with_embedding: number;
   score_distribution: { low: number; medium: number; high: number };
+  leads_pending_review: number;
+  leads_rejected: number;
 };
 
 export type Schedule = {
@@ -63,15 +66,28 @@ export type ScheduleCreate = {
 export const api = {
   stats: () => apiFetch<Stats>("/stats"),
 
-  leads: (params?: { limit?: number; offset?: number; min_score?: number }) => {
+  leads: (params?: { limit?: number; offset?: number; min_score?: number; status?: string }) => {
     const q = new URLSearchParams();
     if (params?.limit) q.set("limit", String(params.limit));
     if (params?.offset) q.set("offset", String(params.offset));
     if (params?.min_score) q.set("min_score", String(params.min_score));
+    if (params?.status) q.set("status", params.status);
     return apiFetch<LeadListResponse>(`/leads?${q}`);
   },
 
   lead: (id: string) => apiFetch<Lead>(`/leads/${id}`),
+
+  approveLead: (id: string) =>
+    apiFetch<Lead>(`/leads/${id}/approve`, { method: "POST" }),
+
+  rejectLead: (id: string) =>
+    apiFetch<Lead>(`/leads/${id}/reject`, { method: "POST" }),
+
+  updatePitch: (id: string, pitch: string) =>
+    apiFetch<Lead>(`/leads/${id}/pitch`, {
+      method: "PATCH",
+      body: JSON.stringify({ suggested_pitch: pitch }),
+    }),
 
   schedules: () => apiFetch<Schedule[]>("/schedules"),
 

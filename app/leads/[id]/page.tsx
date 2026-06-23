@@ -1,5 +1,6 @@
 import { api } from "@/lib/api";
 import ScoreBadge from "@/components/ScoreBadge";
+import LeadActions from "@/components/LeadActions";
 import { notFound } from "next/navigation";
 
 export const revalidate = 0;
@@ -33,12 +34,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
         </div>
       </div>
 
-      {lead.suggested_pitch && (
-        <div className="bg-slate-900 border border-green-800 rounded-xl p-4">
-          <p className="text-xs text-green-400 uppercase tracking-wide mb-3 font-semibold">Mensaje de apertura</p>
-          <p className="text-slate-200 leading-relaxed whitespace-pre-wrap text-sm md:text-base">{lead.suggested_pitch}</p>
-        </div>
-      )}
+      {lead.suggested_pitch && <LeadActions lead={lead} />}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {lead.why_cortex_fits && (

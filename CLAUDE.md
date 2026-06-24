@@ -14,7 +14,7 @@ Dashboard de acción para el sistema cortex-lead-hunter. Permite revisar los lea
 | Desarrollo | Mac — `/Users/carlosjorgech7/Desktop/Cortex/cortex-dashboard` |
 | Producción | Raspberry Pi 5 — `/home/c3jota/cortex-dashboard` |
 | Servicio | `cortex-dashboard.service` (systemd, puerto 3000) |
-| URL pública | `https://raspberrypi.tail9ae84b.ts.net` (Tailscale Funnel) |
+| URL pública | `https://raspberrypi.tail9ae84b.ts.net/cortex` (Tailscale Funnel → nginx → port 3000) |
 | GitHub | `github.com/carlosjorge7/cortex-dashboard` |
 | API backend | `http://localhost:8000` (en Raspberry) / `http://100.73.5.37:8000` (desde Mac) |
 | API key | `cortex-secret-2026` |
@@ -23,7 +23,7 @@ Dashboard de acción para el sistema cortex-lead-hunter. Permite revisar los lea
 ```bash
 rsync -av --exclude='.git' --exclude='node_modules' --exclude='.next' --exclude='.env.local' \
   /Users/carlosjorgech7/Desktop/Cortex/cortex-dashboard/ c3jota@100.73.5.37:/home/c3jota/cortex-dashboard/
-ssh c3jota@100.73.5.37 "cd /home/c3jota/cortex-dashboard && npm install && npm run build && sudo systemctl restart cortex-dashboard"
+ssh c3jota@100.73.5.37 "cd /home/c3jota/cortex-dashboard && npm run build && sudo systemctl restart cortex-dashboard"
 ```
 
 ## Stack

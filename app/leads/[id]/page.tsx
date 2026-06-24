@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { api } from "@/lib/api";
 import ScoreBadge from "@/components/ScoreBadge";
 import LeadActions from "@/components/LeadActions";
@@ -19,9 +20,9 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
     <div className="max-w-3xl space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <a href="/leads" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
+          <Link href="/leads" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
             ← Volver a leads
-          </a>
+          </Link>
           <h1 className="text-xl md:text-2xl font-bold mt-2 leading-tight">{lead.company_name}</h1>
           {lead.website && (
             <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-400 hover:text-blue-300 transition-colors break-all">

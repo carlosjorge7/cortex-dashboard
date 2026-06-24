@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { api } from "@/lib/api";
 import ScoreChart from "@/components/ScoreChart";
 import RecentLeads from "@/components/RecentLeads";
@@ -48,14 +49,14 @@ export default async function DashboardPage() {
         <div className="bg-slate-900 border border-yellow-800/60 rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-sm text-yellow-300">En revisión ({pendingData.total})</h2>
-            <a href="/leads?status=pending_review" className="text-xs text-blue-400 hover:text-blue-300">
+            <Link href="/leads?status=pending_review" className="text-xs text-blue-400 hover:text-blue-300">
               Ver todos →
-            </a>
+            </Link>
           </div>
           <ul className="space-y-2">
             {pendingData.items.map((lead) => (
               <li key={lead.id}>
-                <a
+                <Link
                   href={`/leads/${lead.id}`}
                   className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-slate-800 transition-colors"
                 >
@@ -66,7 +67,7 @@ export default async function DashboardPage() {
                     )}
                   </div>
                   <ScoreBadge score={lead.fit_score} />
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -82,9 +83,9 @@ export default async function DashboardPage() {
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-sm">Últimos leads</h2>
-            <a href="/leads" className="text-xs text-blue-400 hover:text-blue-300">
+            <Link href="/leads" className="text-xs text-blue-400 hover:text-blue-300">
               Ver todos →
-            </a>
+            </Link>
           </div>
           <RecentLeads leads={leadsData.items} />
         </div>

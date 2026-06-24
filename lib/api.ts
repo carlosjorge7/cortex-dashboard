@@ -2,8 +2,9 @@ const SERVER_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? "";
 
 // On the browser, route through Next.js proxy to avoid localhost cross-origin issues
+// /cortex prefix is required because nginx routes /cortex/* to this app (port 3000)
 function getBase() {
-  if (typeof window !== "undefined") return "/api-proxy";
+  if (typeof window !== "undefined") return "/cortex/api-proxy";
   return SERVER_BASE;
 }
 

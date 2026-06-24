@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { api } from "@/lib/api";
 import ScoreBadge from "@/components/ScoreBadge";
 import LeadFilters from "@/components/LeadFilters";
@@ -49,7 +50,7 @@ export default async function LeadsPage({
         {tabs.map((tab) => {
           const active = statusFilter === tab.value;
           return (
-            <a
+            <Link
               key={tab.label}
               href={tabHref(tab.value)}
               className={`px-3 py-2 text-sm rounded-t-lg transition-colors border-b-2 -mb-px ${
@@ -59,7 +60,7 @@ export default async function LeadsPage({
               }`}
             >
               {tab.label}
-            </a>
+            </Link>
           );
         })}
       </div>
@@ -67,7 +68,7 @@ export default async function LeadsPage({
       {/* Mobile: cards */}
       <div className="flex flex-col gap-3 md:hidden">
         {data.items.map((lead) => (
-          <a
+          <Link
             key={lead.id}
             href={`/leads/${lead.id}`}
             className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-start justify-between gap-3 active:bg-slate-800 transition-colors"
@@ -85,7 +86,7 @@ export default async function LeadsPage({
               </p>
             </div>
             <ScoreBadge score={lead.fit_score} />
-          </a>
+          </Link>
         ))}
       </div>
 
@@ -105,9 +106,9 @@ export default async function LeadsPage({
             {data.items.map((lead) => (
               <tr key={lead.id} className="border-b border-slate-800/50 hover:bg-slate-800/40 transition-colors">
                 <td className="px-4 py-3 max-w-[260px]">
-                  <a href={`/leads/${lead.id}`} className="font-medium hover:text-blue-400 transition-colors line-clamp-1">
+                  <Link href={`/leads/${lead.id}`} className="font-medium hover:text-blue-400 transition-colors line-clamp-1">
                     {lead.company_name}
-                  </a>
+                  </Link>
                 </td>
                 <td className="px-4 py-3 text-slate-400 max-w-[200px]">
                   {lead.website ? (
@@ -140,7 +141,7 @@ export default async function LeadsPage({
       {totalPages > 1 && (
         <div className="flex gap-2 justify-center flex-wrap">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <a
+            <Link
               key={p}
               href={`/leads?page=${p}${minScore ? `&min_score=${minScore}` : ""}${statusFilter ? `&status=${statusFilter}` : ""}`}
               className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
@@ -148,7 +149,7 @@ export default async function LeadsPage({
               }`}
             >
               {p}
-            </a>
+            </Link>
           ))}
         </div>
       )}

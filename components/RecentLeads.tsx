@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Lead } from "@/lib/api";
 import ScoreBadge from "./ScoreBadge";
 
@@ -6,7 +7,7 @@ export default function RecentLeads({ leads }: { leads: Lead[] }) {
     <ul className="space-y-3">
       {leads.map((lead) => (
         <li key={lead.id}>
-          <a href={`/leads/${lead.id}`} className="flex items-center justify-between hover:bg-slate-800 rounded-lg p-2 -mx-2 transition-colors">
+          <Link href={`/leads/${lead.id}`} className="flex items-center justify-between hover:bg-slate-800 rounded-lg p-2 -mx-2 transition-colors">
             <div className="min-w-0">
               <p className="text-sm font-medium truncate">{lead.company_name}</p>
               <p className="text-xs text-slate-500 truncate">{lead.website ?? "—"}</p>
@@ -19,7 +20,7 @@ export default function RecentLeads({ leads }: { leads: Lead[] }) {
               )}
               <ScoreBadge score={lead.fit_score} />
             </div>
-          </a>
+          </Link>
         </li>
       ))}
     </ul>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function LeadFilters({ minScore, emailFilter }: { minScore?: string; emailFilter?: string }) {
@@ -30,9 +31,9 @@ export default function LeadFilters({ minScore, emailFilter }: { minScore?: stri
         Filtrar
       </button>
       {(minScore || emailFilter) && (
-        <a href="/leads" className="text-sm text-slate-400 hover:text-white transition-colors">
+        <Link href="/leads" className="text-sm text-slate-400 hover:text-white transition-colors">
           Limpiar
-        </a>
+        </Link>
       )}
     </form>
   );

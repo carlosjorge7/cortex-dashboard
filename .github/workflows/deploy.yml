@@ -19,5 +19,10 @@ jobs:
           NEXT_PUBLIC_API_URL: http://localhost:8000
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
+      - name: Copy static assets to standalone
+        run: |
+          cp -r .next/static .next/standalone/.next/static
+          cp -r public .next/standalone/public 2>/dev/null || true
+
       - name: Restart service
         run: sudo systemctl restart cortex-dashboard

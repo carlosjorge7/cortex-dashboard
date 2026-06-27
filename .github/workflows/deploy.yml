@@ -8,21 +8,24 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - name: Pull latest code
+        run: |
+          cd /home/c3jota/cortex-dashboard
+          git pull origin main
 
       - name: Install dependencies
-        run: npm ci
+        run: cd /home/c3jota/cortex-dashboard && npm ci
 
       - name: Build
-        run: npm run build
+        run: cd /home/c3jota/cortex-dashboard && npm run build
         env:
           NEXT_PUBLIC_API_URL: http://localhost:8000
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Copy static assets to standalone
         run: |
-          cp -r .next/static .next/standalone/.next/static
-          cp -r public .next/standalone/public 2>/dev/null || true
+          cp -r /home/c3jota/cortex-dashboard/.next/static /home/c3jota/cortex-dashboard/.next/standalone/.next/static
+          cp -r /home/c3jota/cortex-dashboard/public /home/c3jota/cortex-dashboard/.next/standalone/public 2>/dev/null || true
 
       - name: Restart service
         run: sudo systemctl restart cortex-dashboard

@@ -21,8 +21,7 @@ export default function SettingsPage() {
       return;
     }
 
-    // Go through the Next.js rewrite proxy — middleware injects the Bearer token automatically
-    const res = await fetch("/cortex/api-proxy/auth/change-password", {
+    const res = await fetch("/cortex/api/auth/change-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

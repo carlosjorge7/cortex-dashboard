@@ -1,12 +1,21 @@
+import { jwtVerify } from "jose";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+
+const SECRET = new TextEncoder().encode(process.env.JWT_SECRET ?? "");
 
 export async function POST(req: NextRequest) {
   const { current_password, new_password } = await req.json();
 
-  // The proxy middleware injects Authorization: Bearer <jwt> for all authenticated requests
-  const authHeader = req.headers.get("authorization") ?? "";
-  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("cortex_token")?.value;
   if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+
+  try {
+    await jwtVerify(token, SECRET);
+  } catch {
+    return NextResponse.json({ error: "Sesión expirada" }, { status: 401 });
+  }
 
   const api = await fetch("http://localhost:8000/auth/change-password", {
     method: "POST",

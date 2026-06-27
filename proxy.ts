@@ -1,7 +1,7 @@
 import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
-const PUBLIC = ["/cortex/login"];
+const PUBLIC = ["/cortex/login", "/cortex/api/auth/login", "/cortex/api/auth/logout"];
 const SECRET = new TextEncoder().encode(process.env.JWT_SECRET ?? "");
 
 export async function proxy(req: NextRequest) {

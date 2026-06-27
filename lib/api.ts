@@ -1,17 +1,19 @@
 const SERVER_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? "";
+// API_KEY is only available server-side (no NEXT_PUBLIC_ prefix). Browser calls use JWT via middleware.
+const API_KEY = process.env.API_KEY ?? "";
 
-// On the browser, route through Next.js proxy to avoid localhost cross-origin issues
-// /cortex prefix is required because nginx routes /cortex/* to this app (port 3000)
+// On the browser, route through Next.js proxy — middleware injects the JWT Bearer token.
 function getBase() {
   if (typeof window !== "undefined") return "/cortex/api-proxy";
   return SERVER_BASE;
 }
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (API_KEY) headers["X-API-Key"] = API_KEY;
   const res = await fetch(`${getBase()}${path}`, {
     ...init,
-    headers: { "X-API-Key": API_KEY, "Content-Type": "application/json", ...init?.headers },
+    headers: { ...headers, ...init?.headers },
     cache: "no-store",
   });
   if (!res.ok) throw new Error(`API ${res.status}: ${path}`);
@@ -116,6 +118,9 @@ export const api = {
   toggleSchedule: (id: string) =>
     apiFetch<Schedule>(`/schedules/${id}/toggle`, { method: "PATCH" }),
 
-  deleteSchedule: (id: string) =>
-    fetch(`${getBase()}/schedules/${id}`, { method: "DELETE", headers: { "X-API-Key": API_KEY } }),
+  deleteSchedule: (id: string) => {
+    const headers: Record<string, string> = {};
+    if (API_KEY) headers["X-API-Key"] = API_KEY;
+    return fetch(`${getBase()}/schedules/${id}`, { method: "DELETE", headers });
+  },
 };

@@ -1,11 +1,11 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const { current_password, new_password } = await req.json();
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("cortex_token")?.value;
+  // The proxy middleware injects Authorization: Bearer <jwt> for all authenticated requests
+  const authHeader = req.headers.get("authorization") ?? "";
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
   if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 
   const api = await fetch("http://localhost:8000/auth/change-password", {

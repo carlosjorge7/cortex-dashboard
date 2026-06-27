@@ -10,12 +10,18 @@ export async function proxy(req: NextRequest) {
   if (PUBLIC.some((p) => pathname.startsWith(p))) return NextResponse.next();
 
   const token = req.cookies.get("cortex_token")?.value;
-  if (!token) return NextResponse.redirect(new URL("/cortex/login", req.url));
+  if (!token) {
+    const loginUrl = req.nextUrl.clone();
+    loginUrl.pathname = "/cortex/login";
+    return NextResponse.redirect(loginUrl);
+  }
 
   try {
     await jwtVerify(token, SECRET);
   } catch {
-    const res = NextResponse.redirect(new URL("/cortex/login", req.url));
+    const loginUrl = req.nextUrl.clone();
+    loginUrl.pathname = "/cortex/login";
+    const res = NextResponse.redirect(loginUrl);
     res.cookies.delete("cortex_token");
     return res;
   }
